@@ -1,3 +1,4 @@
+
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.   See the NOTICE file
 # distributed with this work for additional information
@@ -44,6 +45,7 @@
 #
 # Feel free to modify this file to suit your needs.
 ---
+
 x-airflow-common:
    &airflow-common
    # Use custom image that builds on top of default airflow image (currently; Default: apache/airflow:2.9.2)
@@ -54,6 +56,11 @@ x-airflow-common:
       - .env
    environment:
       &airflow-common-env
+      AIRFLOW__LOGGING__BASE_LOG_FOLDER: /opt/airflow/logs
+      AIRFLOW__LOGGING__REMOTE_LOGGING: "False"
+      AIRFLOW__LOGGING__SERVE_LOGS: "False"
+      AIRFLOW__LOGGING__WORKER_LOG_SERVER_PORT: ""
+      AIRFLOW__WEBSERVER__BASE_URL: http://localhost:8080
       # Set executor to CeleryExecutor 
       AIRFLOW__CORE__EXECUTOR: CeleryExecutor
       # Use SQLAlchemy to connect to Airflow's metadata Postgres database using the psycopg2 driver
@@ -157,6 +164,7 @@ services:
          start_period: 30s
       restart: always
 
+   
    airflow-webserver:
       <<: *airflow-common
       command: webserver
@@ -205,6 +213,7 @@ services:
          start_period: 30s
       environment:
          <<: *airflow-common-env
+         AIRFLOW__LOGGING__LOG_FETCH_TIMEOUT_SEC: 30
          # Required to handle warm shutdown of the celery workers properly
          # See https://airflow.apache.org/docs/docker-stack/entrypoint.html#signal-propagation
          DUMB_INIT_SETSID: "0"
@@ -331,3 +340,8 @@ services:
 
 volumes:
    postgres-db-volume:
+
+
+
+
+

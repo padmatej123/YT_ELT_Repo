@@ -6,9 +6,12 @@ from dotenv import load_dotenv
 from datetime import date
 
 load_dotenv()
+from airflow.models import Variable
 
-API_KEY = os.getenv("YOUR_API_KEY")
-CHANNEL = "MrBeast"
+API_KEY = Variable.get("API_KEY")
+CHANNEL_HANDLE = Variable.get("CHANNEL_HANDLE")
+# API_KEY = os.getenv("YOUR_API_KEY")
+# CHANNEL = "MrBeast"
 
 
 def get_playlist_id():
